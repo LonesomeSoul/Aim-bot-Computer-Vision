@@ -21,7 +21,7 @@ import win32gui, win32ui, win32con, win32api
 
 
 
-# In[ ]:
+# In[4]:
 
 
 def dots_distance(p1,p2):
@@ -65,7 +65,34 @@ def move_mouse_to_target(targets_arr,center_x,center_y):
     #pg.moveRel(sum_dist_x,sum_dist_y,duration=0)
 
 
-# In[3]:
+# In[27]:
+
+
+keyCode=cv2.waitKey(2000)
+if (keyCode& 0xFF == ord("q")):
+    print("ANTON XYILO")
+print(keyCode)
+
+
+# In[24]:
+
+
+keyCode
+
+
+# In[23]:
+
+
+ord("q")
+
+
+# In[19]:
+
+
+print(cv2.waitKey(3000)& 0xFF)
+
+
+# In[ ]:
 
 
 model = load('ultralytics/yolov5', 'custom', path=r'yolov5_weights.pt', force_reload=True)
@@ -73,6 +100,11 @@ model = load('ultralytics/yolov5', 'custom', path=r'yolov5_weights.pt', force_re
 
 # In[ ]:
 
+
+
+
+
+# In[5]:
 
 
 cv2.waitKey(2000)
@@ -91,6 +123,7 @@ center_x=int(screen_size_x/2)
 center_y=int(screen_size_y/2)
 screen_region=[center_x-window_size_x//2, center_y-window_size_y//2, window_size_x, window_size_y]
 wait_time=1000
+aim_bot_active=0
 while True:
     img_np=np.array(pg.screenshot(region=(screen_region)))
     frame = img_np[:,:,::-1]
@@ -99,8 +132,15 @@ while True:
         frame=np.array(results.render()[0])
         wait_time=10
     #cv2.imshow('frame', frame)
+    #if (keyboard.is_pressed("n") and model_active==1):
     cv2.waitKey(wait_time)
-    if (keyboard.is_pressed("n") and model_active==1):
+    if (keyboard.is_pressed("n") and aim_bot_active==0):
+        aim_bot_active=1
+        model_active=1
+    if (keyboard.is_pressed("n") and aim_bot_active==1):
+        aim_bot_active=0
+        model_active=0
+    if (aim_bot_active):
         move_mouse_to_target(results.xyxy[0].cpu().numpy(),center_x,center_y)
     if keyboard.is_pressed("v"):
         sleep(5)
