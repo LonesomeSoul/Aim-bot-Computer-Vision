@@ -13,4 +13,6 @@ pip install -r yolo_reqs.txt
 
 python aim_bot_script.py
 
+to activate or deactivate the aim bot press N button
+
 3) to end scipt execution hold "x"
