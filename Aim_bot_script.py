@@ -21,7 +21,7 @@ import win32gui, win32ui, win32con, win32api
 
 
 
-# In[4]:
+# In[2]:
 
 
 def dots_distance(p1,p2):
@@ -71,23 +71,21 @@ def move_mouse_to_target(targets_arr,center_x,center_y):
 
 
 
-# In[ ]:
+# In[3]:
 
 
 model = load('ultralytics/yolov5', 'custom', path=r'yolov5_weights.pt', force_reload=True)
 
 
-# In[5]:
+# In[28]:
 
 
 cv2.waitKey(2000)
 #screen_count=len(os.listdir(root_path))
 img_np=np.array(pg.screenshot())
-post_process=0
-model_active=0
 model.conf=0.25
-window_size_x=1000
-window_size_y=1000
+window_size_x=300
+window_size_y=300
 screen_size_x=GetSystemMetrics(0)
 screen_size_y=GetSystemMetrics(1)
 abs_multi_x=65535//screen_size_x
@@ -95,38 +93,27 @@ abs_multi_y=65535//screen_size_y+1
 center_x=int(screen_size_x/2)
 center_y=int(screen_size_y/2)
 screen_region=[center_x-window_size_x//2, center_y-window_size_y//2, window_size_x, window_size_y]
-wait_time=1000
+wait_time=10
 aim_bot_active=0
 while True:
     img_np=np.array(pg.screenshot(region=(screen_region)))
     frame = img_np[:,:,::-1]
-    if (model_active):
+    if (aim_bot_active):
         results=model(frame)
         frame=np.array(results.render()[0])
-        wait_time=10
-    #cv2.imshow('frame', frame)
-    #if (keyboard.is_pressed("n") and model_active==1):
-    cv2.waitKey(wait_time)
+        move_mouse_to_target(results.xyxy[0].cpu().numpy(),center_x,center_y)
+    cv2.imshow('frame', frame)
     if (keyboard.is_pressed("n") and aim_bot_active==0):
         aim_bot_active=1
-        model_active=1
+        cv2.waitKey(2000)
     if (keyboard.is_pressed("n") and aim_bot_active==1):
         aim_bot_active=0
-        model_active=0
-    if (aim_bot_active):
-        move_mouse_to_target(results.xyxy[0].cpu().numpy(),center_x,center_y)
-    if keyboard.is_pressed("v"):
-        sleep(5)
-    #if keyboard.is_pressed("escape") or keyboard.is_pressed("x"):
+        cv2.waitKey(2000)
     if keyboard.is_pressed("x"):
         break
-#cv2.destroyWindow("frame")
-
-
-# In[ ]:
-
-
-
+    cv2.waitKey(wait_time)
+    #if keyboard.is_pressed("escape") or keyboard.is_pressed("x"):
+cv2.destroyWindow("frame")
 
 
 # In[ ]:
