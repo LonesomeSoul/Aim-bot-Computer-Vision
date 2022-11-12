@@ -1,6 +1,6 @@
 opencv-python
 keyboard
 numpy
-pywin32
+pypiwin32 
 torch
 pyautogui
